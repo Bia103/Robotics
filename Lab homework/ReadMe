@@ -1,3 +1,13 @@
+
+A 4 display that allows you to chenge its digits when you push a button on the joystich and then move the joystick.
+a. 1 * 4 digit 7-segment display
+b. 1 * joystick
+c. Resistors
+d. Wires
+e. Arduino
+f. Connector cable
+
+
 A buzzer which detects knocks makes another buzzer ring after 5 seconds and there's also a button which stops the sound. 
 Items: a. 1 * passive buzzer for knock detection 
 b. 1 * active buzzer for sound 
