@@ -1,2 +1,2 @@
-**Name of the project: ** Matrix game
+**Name of the project:** Matrix game
 
