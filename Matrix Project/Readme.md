@@ -9,3 +9,5 @@
 The LCD will display a start button, and a highscore one.
 
 Link to video: https://youtu.be/nx5p8MpgENw
+
+![f8affe3f-25ee-493c-8054-83b84a0e749f](https://user-images.githubusercontent.com/48888793/71323817-1b72bd00-24e0-11ea-82c6-b896c6c4c113.jpg)
