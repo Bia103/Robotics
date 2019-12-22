@@ -1,3 +1,4 @@
+
 #include "LedControl.h" //  need the library
 LedControl lc = LedControl(12, 11, 10, 1); //DIN, CLK, LOAD, No. DRIVER
  
@@ -34,12 +35,23 @@ int matrix[8][8] = {
 
 int matrix2[8][8] = {
 {0, 0, 0, 0, 0, 0, 0, 0},
-{0, 1, 0, 0, 0, 1, 0, 0},
-{0, 0, 1, 0, 1, 0, 0, 0},
-{0, 0, 0, 1, 0, 0, 0, 0},
-{0, 0, 1, 0, 1, 0, 0, 0},
-{0, 1, 0, 0, 0, 1, 0, 0},
-{1, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 1, 0, 0, 1, 0, 0},
+{0, 0, 1, 0, 0, 1, 0, 0},
+{0, 0, 1, 0, 0, 1, 0, 0},
+{0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 1, 1, 1, 1, 0, 0},
+{0, 1, 0, 0, 0, 0, 1, 0},
+{0, 0, 0, 0, 0, 0, 0, 0}
+};
+
+int matrix3[8][8] = {
+{0, 0, 0, 0, 0, 0, 0, 0},
+{0, 0, 1, 0, 0, 1, 0, 0},
+{0, 0, 1, 0, 0, 1, 0, 0},
+{0, 0, 1, 0, 0, 1, 0, 0},
+{0, 1, 0, 0, 0, 0, 1, 0},
+{0, 0, 1, 1, 1, 1, 0, 0},
+{0, 0, 0, 0, 0, 0, 0, 0},
 {0, 0, 0, 0, 0, 0, 0, 0}
 };
 const int joyX = A1;
@@ -87,7 +99,7 @@ void setup()
   Serial.begin(9600);
   lcd.begin(16, 2);
 // Print a message to the LCD.
-  lcd.print("hello, world!");
+  lcd.print("     Welcome  ");
   Serial.begin(9600);
   pinMode(joy, INPUT_PULLUP);
   randomSeed(analogRead(0));
@@ -258,6 +270,34 @@ if((millis() - lastMoveTimeOrb) > (5000/(lvl+1))){
 
 lastMoveTimeOrb = millis();}
 
+}
+void sad(){
+for(int i = 1;i <=500;i++){
+  for (int row = 0; row < 8; row++)
+{
+  for (int col = 0; col < 8; col++)
+  {
+    
+     lc.setLed(0, row, col, matrix2[row][col]);
+    }
+  }
+
+//mo
+}
+}
+void happy(){
+for(int i = 1;i <=500;i++){
+  for (int row = 0; row < 8; row++)
+{
+  for (int col = 0; col < 8; col++)
+  {
+    
+     lc.setLed(0, row, col, matrix3[row][col]);
+    }
+  }
+
+//mo
+}
 }
 void moveMagicOrbs()
 {
@@ -457,8 +497,15 @@ for (int row = 0; row < 8; row++)
       matrix[4][5] = 0;
   }
 }
+int ok3 = 0, ok7 = 0;
 void loop()
 {
+  if(ok7 == 0){
+  if(ok3 == 0){
+    ok3 = 1;
+    lcd.print("   Welcome   ");
+    delay(5000);
+  }
      buttonState = digitalRead(joy);
    valX = analogRead(joyX);
    valY = analogRead(joyY);
@@ -517,7 +564,7 @@ void loop()
    if (posY == 4) posY = 0;
    if (posY == -1) posY = 2;
    //Serial.println(buttonState);
-   
+  }
   if( ecran == 0 )
   {
     lives = 3;
@@ -542,6 +589,7 @@ void loop()
           ecran = 1;
           buttonState = 1;
           lastMillis = millis();
+          ok7 = 1;
         }
 
     }
@@ -606,14 +654,29 @@ void loop()
           lastDebounceTime = millis();
        }
        if(lives <= 0)
-       {
-        if(score > highScore)
+       { ok7 = 0;
+        int value = EEPROM.read(0); 
+        if(value > highScore)
         {
           highScore = score;
           EEPROM.update(0,highScore); 
+          ecran = 0;
+        
+        score = 0;
+        cleanMatrix();
+        lcd.setCursor(0, 0);
+        lcd.print("Congratulations on making");
+        lcd.setCursor(0, 1);
+         lcd.print(" a highscore ");
+         lcd.print(lvl +1);
+         happy();
+         delay(2000);
+        lvl = 0;
+
+        //ecran = 5;
         }else{
         ecran = 0;
-        
+                sad();
         score = 0;
         cleanMatrix();
         lcd.setCursor(0, 0);
@@ -621,12 +684,15 @@ void loop()
         lcd.setCursor(0, 1);
          lcd.print(" past level ");
          lcd.print(lvl +1);
+         lcd.print("    ");
          delay(2000);
-        lvl = 0;}
-       }
+        lvl = 0;
+        //ecran = 5;
+        }
+       
       
   }
-     
+  }     
  else if(ecran == 2)
  {
       lcd.setCursor(0, 0);
@@ -659,7 +725,7 @@ void loop()
     int value = EEPROM.read(0);                //read EEPROM data at address i
     lcd.setCursor(0,1);
     lcd.print(value);
-  
+   lcd.print("                ");
        
   if(buttonState == 0 && (millis() - lastMillis > millisWaitInterval))
         {
@@ -673,23 +739,36 @@ void loop()
 
 }else if(ecran == 4){
   lcd.setCursor(0, 0);
-       lcd.print("Furculesteanu Bianca");
+       lcd.print("  Furculesteanu         ");
       
        lcd.setCursor(0, 1);
   
-       lcd.print("Magic Orbs ");
+       lcd.print("    Bianca ");
        
        lcd.print("        ");
-     
-   
+       delay(3000);
+     lcd.setCursor(0, 0);
+       lcd.print("     Magic        ");
+      
+       lcd.setCursor(0, 1);
+  
+       lcd.print("      Orbs ");
        
-  if(buttonState == 0 && (millis() - lastMillis > millisWaitInterval))
-        {
-         
+       lcd.print("        ");
+       delay(3000);
+   lcd.setCursor(0, 0);
+       lcd.print("      Github         ");
+      
+       lcd.setCursor(0, 1);
+  
+       lcd.print("https://github.com ");
+       
+       lcd.print("        ");
+       delay(3000);
+       
+
           ecran = 0;
-          buttonState = 1;
-          lastMillis = millis();
-        }
+       
 
     
 
